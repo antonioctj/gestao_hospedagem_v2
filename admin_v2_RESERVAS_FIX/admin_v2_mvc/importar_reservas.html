@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Importar Reservas - Booking.com</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body { 
+      background: #000; 
+      color: #fff; 
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    
+    .text-orange { color: #ff6600; }
+    .mb-4 { margin-bottom: 20px; }
+    .mt-4 { margin-top: 20px; }
+    
+    .alert {
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      display: none;
+    }
+    
+    .alert-success {
+      background: #4CAF50;
+      color: #fff;
+    }
+    
+    .alert-error {
+      background: #f44336;
+      color: #fff;
+    }
+    
+    .info-box, .upload-box {
+      background: #111;
+      border: 2px solid #ff6600;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .info-box h3, .upload-box h3 {
+      color: #ff6600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .info-box ol, .info-box ul {
+      padding-left: 20px;
+      line-height: 2;
+    }
+    
+    .info-box li {
+      margin-bottom: 10px;
+    }
+    
+    .info-box a {
+      color: #2196F3;
+    }
+    
+    .file-input {
+      margin: 20px 0;
+      position: relative;
+    }
+    
+    .file-input input[type="file"] {
+      display: none;
+    }
+    
+    .file-input label {
+      display: block;
+      padding: 40px;
+      background: #222;
+      border: 3px dashed #ff6600;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-input label:hover {
+      background: #2a2a2a;
+      border-color: #ff7b00;
+    }
+    
+    .file-input label i {
+      font-size: 48px;
+      color: #ff6600;
+      display: block;
+      margin-bottom: 15px;
+    }
+    
+    .file-input label span {
+      color: #fff;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-orange {
+      background: #ff6600;
+      color: #fff;
+    }
+    
+    .btn-orange:hover {
+      background: #ff7b00;
+    }
+    
+    .btn-orange:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: #333;
+      color: #fff;
+    }
+    
+    .btn-secondary:hover {
+      background: #444;
+    }
+    
+    #arquivoAnexado {
+      margin: 20px 0;
+      display: none;
+    }
+    
+    .arquivo-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      background: #0a2a0a;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+    }
+    
+    .arquivo-info > i {
+      font-size: 32px;
+      color: #4CAF50;
+    }
+    
+    .arquivo-detalhes {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .arquivo-detalhes strong {
+      color: #4CAF50;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .arquivo-detalhes small {
+      color: #999;
+      font-size: 13px;
+    }
+    
+    .btn-remover {
+      background: #f44336;
+      border: none;
+      color: #fff;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+    
+    .btn-remover:hover {
+      background: #d32f2f;
+    }
+    
+    #statusImportacao {
+      margin-top: 20px;
+      display: none;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      background: #1a3a5a;
+      border: 2px solid #2196F3;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+    }
+    
+    .loading i {
+      font-size: 24px;
+      color: #2196F3;
+    }
+    
+    .detalhes-erro {
+      margin-top: 15px;
+    }
+    
+    .detalhes-erro summary {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 5px;
+    }
+    
+    .detalhes-erro ul {
+      margin-top: 10px;
+      padding-left: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-orange mb-4">Importar Reservas do Booking.com</h2>
+    
+    <div id="alertContainer"></div>
+    
+    <div class="info-box">
+      <h3><i class="fas fa-info-circle"></i> Como Exportar e Importar do Booking.com</h3>
+      <ol>
+        <li><strong>Baixe do Booking:</strong>
+          <ul style="margin-top: 5px;">
+            <li>Acesse: <a href="https://admin.booking.com/" target="_blank">admin.booking.com</a></li>
+            <li>VÃ¡ em <strong>Reservas</strong> â†’ <strong>Todas as reservas</strong></li>
+            <li>Use filtros para selecionar o perÃ­odo</li>
+            <li>Clique em <strong>Exportar</strong> e baixe o arquivo Excel</li>
+          </ul>
+        </li>
+        <li><strong>Converta para TXT:</strong>
+          <ul style="margin-top: 5px;">
+            <li>Abra o arquivo Excel baixado</li>
+            <li><strong>Arquivo</strong> â†’ <strong>Salvar Como</strong></li>
+            <li>Tipo: <strong>"Texto (separado por tabulaÃ§Ã£o) (*.txt)"</strong></li>
+            <li>Clique em Salvar</li>
+          </ul>
+        </li>
+        <li><strong>Importe aqui:</strong> FaÃ§a upload do arquivo .txt convertido</li>
+      </ol>
+      <div style="background: #1a3a1a; padding: 15px; border-radius: 5px; margin-top: 15px;">
+        <strong style="color: #4CAF50;">ðŸ’¡ Dica:</strong> A conversÃ£o leva menos de 1 minuto e funciona perfeitamente!
+      </div>
+    </div>
+    
+    <div class="info-box" style="background: #1a2a3a; border-color: #2196F3;">
+      <h3 style="color: #2196F3;"><i class="fas fa-check-circle"></i> Formato Aceito</h3>
+      <p><strong>âœ… Arquivo TXT ou TSV (separado por tabulaÃ§Ã£o)</strong></p>
+      <ul style="line-height: 2;">
+        <li>âœ“ Detecta colunas automaticamente</li>
+        <li>âœ“ Atualiza reservas existentes</li>
+        <li>âœ“ Converte datas e status automaticamente</li>
+        <li>âœ“ Mostra erros detalhados se houver problema</li>
+      </ul>
+    </div>
+    
+    <div class="upload-box">
+      <h3><i class="fas fa-upload"></i> Upload do Arquivo</h3>
+      <form id="formImport" enctype="multipart/form-data">
+        <div class="file-input">
+          <input type="file" name="arquivo" id="arquivo" accept=".txt,.tsv,.csv" required>
+          <label for="arquivo" id="labelArquivo">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Clique aqui ou arraste o arquivo TXT/TSV</span>
+            <small style="display: block; margin-top: 10px; color: #999;">Formatos aceitos: TXT, TSV, CSV</small>
+          </label>
+        </div>
+        
+        <div id="arquivoAnexado">
+          <div class="arquivo-info">
+            <i class="fas fa-file-alt"></i>
+            <div class="arquivo-detalhes">
+              <strong id="nomeArquivo"></strong>
+              <small id="tamanhoArquivo"></small>
+            </div>
+            <button type="button" class="btn-remover" onclick="removerArquivo()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-orange" id="btnImportar">
+          <i class="fas fa-file-import"></i> Importar Reservas
+        </button>
+        
+        <div id="statusImportacao">
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Processando arquivo... Aguarde!</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <div class="mt-4">
+      <a href="reservas.php" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar para Reservas
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function mostrarArquivo(input) {
+      const arquivo = input.files[0];
+      
+      if (arquivo) {
+        document.getElementById('nomeArquivo').textContent = arquivo.name;
+        document.getElementById('tamanhoArquivo').textContent = formatarTamanho(arquivo.size);
+        document.getElementById('arquivoAnexado').style.display = 'block';
+        
+        const label = document.getElementById('labelArquivo');
+        label.style.borderColor = '#4CAF50';
+        label.style.background = '#0a2a0a';
+        label.querySelector('i').style.color = '#4CAF50';
+        label.querySelector('span').textContent = 'âœ“ Arquivo selecionado!';
+      }
+    }
+
+    function removerArquivo() {
+      document.getElementById('arquivo').value = '';
+      document.getElementById('arquivoAnexado').style.display = 'none';
+      
+      const label = document.getElementById('labelArquivo');
+      label.style.borderColor = '#ff6600';
+      label.style.background = '#222';
+      label.querySelector('i').style.color = '#ff6600';
+      label.querySelector('span').textContent = 'Clique aqui ou arraste o arquivo do Booking.com';
+    }
+
+    function formatarTamanho(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    function mostrarAlerta(tipo, mensagem, detalhes = null) {
+      const alertContainer = document.getElementById('alertContainer');
+      let html = `<div class="alert alert-${tipo}">${mensagem}`;
+      
+      // Mostrar debug se existir
+      if (detalhes && Array.isArray(detalhes)) {
+        const temDebug = detalhes.some(d => typeof d === 'string' && d.includes('CABEÃ‡ALHO'));
+        
+        if (temDebug) {
+          html += `<details class="detalhes-erro" style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px;">
+            <summary style="cursor: pointer; font-weight: bold; color: #ffa500;">ðŸ” Ver estrutura do arquivo (Debug)</summary>
+            <pre style="margin-top: 10px; font-size: 12px; overflow-x: auto; color: #0f0;">`;
+          detalhes.forEach(d => {
+            html += `${d}\n`;
+          });
+          html += `</pre></details>`;
+        } else if (detalhes.length > 0) {
+          html += `<details class="detalhes-erro">
+            <summary>Ver detalhes dos erros (${detalhes.length})</summary>
+            <ul>`;
+          detalhes.forEach(erro => {
+            html += `<li>${erro}</li>`;
+          });
+          html += `</ul></details>`;
+        }
+      }
+      
+      html += `</div>`;
+      alertContainer.innerHTML = html;
+      alertContainer.querySelector('.alert').style.display = 'block';
+      
+      // Scroll para o topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Enviar formulÃ¡rio via AJAX
+    document.getElementById('formImport').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const btnImportar = document.getElementById('btnImportar');
+      const statusImportacao = document.getElementById('statusImportacao');
+      
+      // Mostrar loading
+      statusImportacao.style.display = 'block';
+      btnImportar.disabled = true;
+      
+      try {
+        const response = await fetch('processar_importacao.php', {
+          method: 'POST',
+          body: formData
+        });
+        
+        // Verificar se a resposta Ã© vÃ¡lida
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        // Pegar texto da resposta primeiro para debug
+        const textResponse = await response.text();
+        
+        console.log('Resposta do servidor:', textResponse);
+        
+        // Tentar fazer parse do JSON
+        let result;
+        try {
+          result = JSON.parse(textResponse);
+        } catch (jsonError) {
+          console.error('Erro ao fazer parse:', jsonError);
+          
+          // Mostrar resposta em um alerta para o usuÃ¡rio ver
+          mostrarAlerta('error', 
+            'âŒ Erro: O servidor retornou uma resposta invÃ¡lida. Veja os detalhes abaixo:', 
+            ['Resposta do servidor:', textResponse.substring(0, 500)]
+          );
+          
+          statusImportacao.style.display = 'none';
+          btnImportar.disabled = false;
+          return;
+        }
+        
+        // Esconder loading
+        statusImportacao.style.display = 'none';
+        btnImportar.disabled = false;
+        
+        // Mostrar resultado
+        if (result.success) {
+          mostrarAlerta('success', result.mensagem, result.debug || result.detalhes || null);
+          
+          // Limpar formulÃ¡rio apÃ³s sucesso
+          setTimeout(() => {
+            removerArquivo();
+          }, 2000);
+        } else {
+          mostrarAlerta('error', result.mensagem, result.debug || result.detalhes || null);
+        }
+        
+      } catch (error) {
+        statusImportacao.style.display = 'none';
+        btnImportar.disabled = false;
+        mostrarAlerta('error', 'Erro ao processar arquivo: ' + error.message);
+        console.error('Erro completo:', error);
+      }
+    });
+
+    // Evento de mudanÃ§a de arquivo
+    document.getElementById('arquivo').addEventListener('change', function() {
+      mostrarArquivo(this);
+    });
+
+    // Drag and drop
+    const label = document.getElementById('labelArquivo');
+
+    label.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      this.style.borderColor = '#4CAF50';
+      this.style.background = '#0a2a0a';
+    });
+
+    label.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      this.style.borderColor = '#ff6600';
+      this.style.background = '#222';
+    });
+
+    label.addEventListener('drop', function(e) {
+      e.preventDefault();
+      const arquivo = e.dataTransfer.files[0];
+      
+      if (arquivo) {
+        const input = document.getElementById('arquivo');
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(arquivo);
+        input.files = dataTransfer.files;
+        mostrarArquivo(input);
+      }
+      
+      this.style.borderColor = '#ff6600';
+      this.style.background = '#222';
+    });
+  </script>
+</body>
+</html>
