@@ -169,37 +169,11 @@ export default function AdminDashboard() {
         </div>
 
         {/* Análise Financeira Completa */}
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-              <span className="w-1 h-6 bg-emerald-600 rounded"></span>
-              Análise Financeira
-            </h2>
-            <div className="flex gap-2">
-              <PeriodButton
-                label="Semana"
-                isActive={period.type === 'week'}
-                onClick={() => handlePeriodChange('week')}
-              />
-              <PeriodButton
-                label="Mês"
-                isActive={period.type === 'month'}
-                onClick={() => handlePeriodChange('month')}
-              />
-              <PeriodButton
-                label="Trimestre"
-                isActive={period.type === 'quarter'}
-                onClick={() => handlePeriodChange('quarter')}
-              />
-              <PeriodButton
-                label="Ano"
-                isActive={period.type === 'year'}
-                onClick={() => handlePeriodChange('year')}
-              />
-            </div>
-          </div>
-          <FinancialAnalysis data={metrics.revenueBreakdown} />
-        </div>
+        <FinancialAnalysis
+          data={metrics.revenueBreakdown}
+          period={period}
+          onPeriodChange={handlePeriodChange}
+        />
 
 
       {/* Apartment Performance Cards */}

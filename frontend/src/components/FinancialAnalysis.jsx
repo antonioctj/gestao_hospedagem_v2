@@ -1,6 +1,6 @@
 import { DollarSign } from 'lucide-react'
 
-export default function FinancialAnalysis({ data }) {
+export default function FinancialAnalysis({ data, period, onPeriodChange }) {
   if (!data) return null
 
   const { totalBruto, totalDescontos, totalLiquido, percentualLiquido } = data
@@ -14,10 +14,36 @@ export default function FinancialAnalysis({ data }) {
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-      <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-        <span className="w-1 h-6 bg-blue-600 rounded"></span>
-        Análise Financeira
-      </h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span className="w-1 h-6 bg-blue-600 rounded"></span>
+          Análise Financeira
+        </h2>
+        {onPeriodChange && period && (
+          <div className="flex gap-2">
+            <PeriodButton
+              label="Semana"
+              isActive={period.type === 'week'}
+              onClick={() => onPeriodChange('week')}
+            />
+            <PeriodButton
+              label="Mês"
+              isActive={period.type === 'month'}
+              onClick={() => onPeriodChange('month')}
+            />
+            <PeriodButton
+              label="Trimestre"
+              isActive={period.type === 'quarter'}
+              onClick={() => onPeriodChange('quarter')}
+            />
+            <PeriodButton
+              label="Ano"
+              isActive={period.type === 'year'}
+              onClick={() => onPeriodChange('year')}
+            />
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Receita Bruta */}
@@ -119,5 +145,20 @@ export default function FinancialAnalysis({ data }) {
         </div>
       </div>
     </div>
+  )
+}
+
+function PeriodButton({ label, isActive, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+        isActive
+          ? 'bg-slate-900 text-white shadow-md'
+          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+      }`}
+    >
+      {label}
+    </button>
   )
 }
