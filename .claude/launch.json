@@ -7,6 +7,24 @@
       "runtimeArgs": ["--prefix", "..\\frontend", "run", "dev"],
       "port": 5173,
       "autoPort": true
+    },
+    {
+      "name": "uberhost-v2-backend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\UBERHOST_v2\\backend && C:\\xampp\\php\\php.exe -S localhost:8000 router.php"],
+      "port": 8000
+    },
+    {
+      "name": "uberhost-v2-frontend",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\UBERHOST_v2\\frontend && npm run dev"],
+      "port": 5185
+    },
+    {
+      "name": "uberhost-web-next",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\UBERHOST_v1\\web_next && npm run dev"],
+      "port": 3000
     }
   ]
 }
